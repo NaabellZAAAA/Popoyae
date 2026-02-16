@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo เกมทายเลขจ้า</title>
+
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #4c5fd7;
+            transform: scale(1.05);
+        }
+
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        @keyframes winPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.win {
+    animation: winPop 0.5s ease;
+    font-size: 22px;
+}
+
+body.win-bg {
+    background: linear-gradient(to right, #00c9ff, #92fe9d);
+}
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🎮 เกมทายเลข</h1>
+        <p>ทายเลขระหว่าง 1 - 10</p>
+
+        <input type="number" id="guess">
+
+        <br>
+
+        <button onclick="checkGuess()">ทาย!</button>
+        <button onclick="resetGame()">เล่นใหม่</button>
+
+        <p id="result"></p>
+    </div>
+
+    <script>
+       let randomNumber = Math.floor(Math.random() * 10) + 1;
+
+function checkGuess() {
+    let userGuess = parseInt(document.getElementById("guess").value);
+    let result = document.getElementById("result");
+
+    if (userGuess === randomNumber) {
+        result.innerText = "🎉 ถูกต้อง! เก่งมากครับเบบี๋!";
+        result.style.color = "green";
+
+        // ใส่อนิเมชันข้อความ
+        result.classList.add("win");
+
+        // เปลี่ยนพื้นหลัง
+        document.body.classList.add("win-bg");
+
+        showConfetti();
+
+    } else if (userGuess > randomNumber) {
+        result.innerText = "📈 สูงไป! ค้าบเด็กโง่";
+        result.style.color = "orange";
+    } else if (userGuess < randomNumber) {
+        result.innerText = "📉 ต่ำไป! ค้าบเบ๊บ";
+        result.style.color = "orange";
+    } else {
+        result.innerText = "⚠️ กรุณาใส่ตัวเลข";
+        result.style.color = "red";
+    }
+}
+
+
+function resetGame() {
+    randomNumber = Math.floor(Math.random() * 10) + 1;
+
+    let result = document.getElementById("result");
+    result.innerText = "";
+    result.classList.remove("win");
+
+    document.body.classList.remove("win-bg");
+
+    document.getElementById("guess").value = "";
+}
+
+function showConfetti() {
+    for (let i = 0; i < 20; i++) {
+        let confetti = document.createElement("div");
+        confetti.innerText = "🎊";
+        confetti.style.position = "fixed";
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.top = "-20px";
+        confetti.style.fontSize = "20px";
+        confetti.style.animation = "fall 2s linear forwards";
+        document.body.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 2000);
+    }
+}
+
+
+    </script>
+
+</body>
+</html>
