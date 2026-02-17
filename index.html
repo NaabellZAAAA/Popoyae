@@ -225,7 +225,13 @@ function updateHint(){
 }
 
 function checkGuess(){
-    let guess=document.getElementById("guessInput").value;
+    let guess=document.getElementById("guessInput").value.trim();
+
+    // ✅ ถ้ายังไม่พิมพ์อะไร
+    if(guess === ""){
+        document.getElementById("result").innerHTML="⚠️ กรุณาพิมพ์คำตอบก่อนกดทาย!";
+        return; // หยุดการทำงานตรงนี้เลย
+    }
 
     if(guess===secretWord){
         score+=20+timeLeft;
@@ -245,6 +251,7 @@ function checkGuess(){
     }
 }
 
+
 function endGame(win){
     if(win){
         document.getElementById("result").innerHTML="🎉 ถูกต้อง!";
@@ -258,3 +265,4 @@ function endGame(win){
 
 </body>
 </html>
+
