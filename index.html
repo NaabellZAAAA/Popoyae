@@ -158,6 +158,8 @@ let timeLeft=30;
 let hintLevel=1;
 let score=0;
 let timer;
+let gameActive = false;
+
 
 function showGame(){
     document.getElementById("menu").classList.remove("active");
@@ -186,6 +188,9 @@ function startGame(){
     attempts=5;
     timeLeft=30;
     hintLevel=1;
+    gameActive = true;
+    document.getElementById("guessInput").disabled = false;
+
 
     updateHint();
 
@@ -225,12 +230,16 @@ function updateHint(){
 }
 
 function checkGuess(){
+
+    if(!gameActive){
+        return; // ถ้าเกมจบแล้ว ห้ามทำงานต่อ
+    }
+
     let guess=document.getElementById("guessInput").value.trim();
 
-    // ✅ ถ้ายังไม่พิมพ์อะไร
     if(guess === ""){
         document.getElementById("result").innerHTML="⚠️ กรุณาพิมพ์คำตอบก่อนกดทาย!";
-        return; // หยุดการทำงานตรงนี้เลย
+        return;
     }
 
     if(guess===secretWord){
@@ -253,6 +262,11 @@ function checkGuess(){
 
 
 function endGame(win){
+
+    gameActive = false; // 🔒 ปิดเกม
+
+    document.getElementById("guessInput").disabled = true;
+
     if(win){
         document.getElementById("result").innerHTML="🎉 ถูกต้อง!";
     }else{
@@ -261,8 +275,8 @@ function endGame(win){
     }
 }
 
+
 </script>
 
 </body>
 </html>
-
