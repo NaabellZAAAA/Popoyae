@@ -1,162 +1,260 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <title>Demo เกมทายเลขจ้า</title>
-
-    <style>
-        body {
-            background: linear-gradient(to right, #667eea, #764ba2);
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center;
-            width: 300px;
-        }
-
-        h1 {
-            margin-bottom: 10px;
-        }
-
-        input {
-            padding: 10px;
-            width: 80%;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin: 5px;
-        }
-
-        button:hover {
-            background: #4c5fd7;
-            transform: scale(1.05);
-        }
-
-        #result {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        @keyframes winPop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
+<meta charset="UTF-8">
+<title>"ทายคำทายไปทายเรื่อยๆ"</title>
+<style>
+body{
+    margin:0;
+    font-family:'Kanit',sans-serif;
+    text-align:center;
+    background: radial-gradient(circle at top,#1e3c72,#2a5298);
+    color:white;
 }
 
-.win {
-    animation: winPop 0.5s ease;
-    font-size: 22px;
+.screen{
+    display:none;
+    height:100vh;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
 }
 
-body.win-bg {
-    background: linear-gradient(to right, #00c9ff, #92fe9d);
-}
-@keyframes fall {
-    to {
-        transform: translateY(100vh);
-        opacity: 0;
-    }
+.active{
+    display:flex;
 }
 
+.title{
+    font-size:40px;
+    margin-bottom:20px;
+    text-shadow:0 0 15px cyan;
+}
 
-    </style>
+button{
+    padding:10px 20px;
+    margin:8px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+    color:white;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1);
+}
+
+.game-box{
+    background:rgba(0,0,0,0.6);
+    padding:25px;
+    border-radius:20px;
+    width:420px;
+}
+
+input,select{
+    padding:8px;
+    border-radius:8px;
+    border:none;
+    margin:5px;
+}
+</style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>🎮 เกมทายเลข</h1>
-        <p>ทายเลขระหว่าง 1 - 10</p>
+<!-- เมนูหลัก -->
+<div id="menu" class="screen active">
+    <div class="title">🎮 ทายคำฉันคือใครครับเนี่ยยย</div>
+    <button onclick="showGame()">เริ่มเกม</button>
+    <button onclick="showHowTo()">วิธีเล่น</button>
+</div>
 
-        <input type="number" id="guess">
-
+<!-- หน้าวิธีเล่น -->
+<div id="howto" class="screen">
+    <div class="game-box">
+        <h2>📖 วิธีเล่น</h2>
+        <p>1️⃣ เลือกหมวดหมู่</p>
+        <p>2️⃣ อ่านคำใบ้แรก (คำอธิบาย)</p>
+        <p>3️⃣ พิมพ์คำตอบแล้วกด "ทาย!"</p>
+        <p>4️⃣ ถ้าตอบผิด จะได้คำใบ้เพิ่ม</p>
+        <p>5️⃣ มีเวลา 30 วินาที และโอกาส 5 ครั้ง</p>
+        <p>6️⃣ ยิ่งตอบเร็ว คะแนนยิ่งสูง</p>
         <br>
-
-        <button onclick="checkGuess()">ทาย!</button>
-        <button onclick="resetGame()">เล่นใหม่</button>
-
-        <p id="result"></p>
+        <button onclick="backMenu()">กลับเมนู</button>
     </div>
+</div>
 
-    <script>
-       let randomNumber = Math.floor(Math.random() * 10) + 1;
+<!-- หน้าเกม -->
+<div id="game" class="screen">
+<div class="game-box">
 
-function checkGuess() {
-    let userGuess = parseInt(document.getElementById("guess").value);
-    let result = document.getElementById("result");
+<h2>เลือกหมวดหมู่</h2>
 
-    if (userGuess === randomNumber) {
-        result.innerText = "🎉 ถูกต้อง! เก่งมากครับเบบี๋!";
-        result.style.color = "green";
+<select id="category">
+<option value="animals">เพื่อน</option>
+<option value="food">อาจารย์</option>
+<option value="country">ภรรยา</option>
+<option value="tech">ดารา</option>
+</select>
 
-        // ใส่อนิเมชันข้อความ
-        result.classList.add("win");
+<br>
+<button onclick="startGame()">เริ่มทาย</button>
 
-        // เปลี่ยนพื้นหลัง
-        document.body.classList.add("win-bg");
+<hr>
 
-        showConfetti();
+<p id="hint"></p>
+<p id="timer">⏳ เวลา: 30</p>
+<p id="attempts">โอกาส: 5</p>
 
-    } else if (userGuess > randomNumber) {
-        result.innerText = "📈 สูงไป! ค้าบเด็กโง่";
-        result.style.color = "orange";
-    } else if (userGuess < randomNumber) {
-        result.innerText = "📉 ต่ำไป! ค้าบเบ๊บ";
-        result.style.color = "orange";
-    } else {
-        result.innerText = "⚠️ กรุณาใส่ตัวเลข";
-        result.style.color = "red";
+<input type="text" id="guessInput">
+<br>
+<button onclick="checkGuess()">ทาย!</button>
+
+<p id="result"></p>
+<p>คะแนน: <span id="score">0</span></p>
+
+<button onclick="backMenu()">ออกเกม</button>
+
+</div>
+</div>
+
+<script>
+
+let words = {
+animals:[
+ {word:"ก๊อต", hint:"ชอบตามมาดมของ"},
+ {word:"เต้", hint:"ได้ของใหม่แล้วจะชอบโชว์อวดของ"},
+ {word:"เบลล์", hint:"หน้าตาดีๆหน่อยติดปิง"},
+ {word:"บอส", hint:"โอ๊ะ มันมี 3 ตัวกุแต๊ก"},
+ {word:"เจมส์", hint:"ตังกุจะหมดแล้ววะเบลล์"}
+],
+food:[
+ {word:"อ.ต้อม", hint:"เคยเลี้ยงกุ้งอยู่พิดโลก"},
+ {word:"อ.เก้ง", hint:"ดื่มสิงฆ์โนแข็ง"},
+ {word:"อ.แดง", hint:"กุชอบ.. แบบดับเบิ้ล"},
+ {word:"อ.ไม้ร่ม", hint:"พี่ไม่ได้รักเจ้าาา"},
+ {word:"อาจารย์คง", hint:"จันคง"}
+],
+country:[
+ {word:"อุ้ม", hint:"อันนี้ไม่มีแฟนใช้อะไร"},
+ {word:"บีม", hint:"มีเรื่องเมาส์ตลอดเวลา"},
+ {word:"นิว", hint:"น่ารักๆมีแฝด"},
+ {word:"ดาว", hint:"ตัวแม่ตัวมัมในแผนก"},
+ {word:"ไอ", hint:"ตีแบดจนได้ผัว"}
+],
+tech:[
+ {word:"ไข่เน่า", hint:"ตำนานรอยยิ้มกระชากใจ OLF"},
+ {word:"เดียร์ลอง", hint:"ไมค์คู่ประเทศไทย"},
+ {word:"มิยาบิ", hint:"ตำนานตัวแม่ของญี่ปุ่น"},
+ {word:"โรเซ่", hint:"สวยที่สุดใน BP"},
+ {word:"อนุทิน", hint:"โดนไม้กลองตีหน้า"}
+]
+};
+
+let secretWord="";
+let currentHint="";
+let attempts=5;
+let timeLeft=30;
+let hintLevel=1;
+let score=0;
+let timer;
+
+function showGame(){
+    document.getElementById("menu").classList.remove("active");
+    document.getElementById("game").classList.add("active");
+}
+
+function showHowTo(){
+    document.getElementById("menu").classList.remove("active");
+    document.getElementById("howto").classList.add("active");
+}
+
+function backMenu(){
+    clearInterval(timer);
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.getElementById("menu").classList.add("active");
+}
+
+function startGame(){
+    let category=document.getElementById("category").value;
+    let categoryWords=words[category];
+    let randomItem=categoryWords[Math.floor(Math.random()*categoryWords.length)];
+
+    secretWord=randomItem.word;
+    currentHint=randomItem.hint;
+
+    attempts=5;
+    timeLeft=30;
+    hintLevel=1;
+
+    updateHint();
+
+    document.getElementById("attempts").innerHTML="โอกาส: "+attempts;
+    document.getElementById("result").innerHTML="";
+    document.getElementById("guessInput").value="";
+    document.getElementById("timer").innerHTML="⏳ เวลา: "+timeLeft;
+
+    clearInterval(timer);
+    timer=setInterval(()=>{
+        timeLeft--;
+        document.getElementById("timer").innerHTML="⏳ เวลา: "+timeLeft;
+        if(timeLeft<=0){
+            clearInterval(timer);
+            endGame(false);
+        }
+    },1000);
+}
+
+function updateHint(){
+    let hintText="💡 คำใบ้:<br>";
+
+    if(hintLevel>=1){
+        hintText+="• คำอธิบาย: "+currentHint+"<br>";
+    }
+    if(hintLevel>=2){
+        hintText+="• จำนวนตัวอักษร: "+secretWord.length+"<br>";
+    }
+    if(hintLevel>=3){
+        hintText+="• ตัวแรก: "+secretWord.charAt(0)+"<br>";
+    }
+    if(hintLevel>=4){
+        hintText+="• ตัวสุดท้าย: "+secretWord.charAt(secretWord.length-1)+"<br>";
+    }
+
+    document.getElementById("hint").innerHTML=hintText;
+}
+
+function checkGuess(){
+    let guess=document.getElementById("guessInput").value;
+
+    if(guess===secretWord){
+        score+=20+timeLeft;
+        document.getElementById("score").innerHTML=score;
+        clearInterval(timer);
+        endGame(true);
+    }else{
+        attempts--;
+        hintLevel++;
+        updateHint();
+        document.getElementById("attempts").innerHTML="โอกาส: "+attempts;
+
+        if(attempts<=0){
+            clearInterval(timer);
+            endGame(false);
+        }
     }
 }
 
-
-function resetGame() {
-    randomNumber = Math.floor(Math.random() * 10) + 1;
-
-    let result = document.getElementById("result");
-    result.innerText = "";
-    result.classList.remove("win");
-
-    document.body.classList.remove("win-bg");
-
-    document.getElementById("guess").value = "";
-}
-
-function showConfetti() {
-    for (let i = 0; i < 20; i++) {
-        let confetti = document.createElement("div");
-        confetti.innerText = "🎊";
-        confetti.style.position = "fixed";
-        confetti.style.left = Math.random() * window.innerWidth + "px";
-        confetti.style.top = "-20px";
-        confetti.style.fontSize = "20px";
-        confetti.style.animation = "fall 2s linear forwards";
-        document.body.appendChild(confetti);
-
-        setTimeout(() => confetti.remove(), 2000);
+function endGame(win){
+    if(win){
+        document.getElementById("result").innerHTML="🎉 ถูกต้อง!";
+    }else{
+        document.getElementById("result").innerHTML=
+        "😢 แพ้แล้ว! คำตอบคือ "+secretWord;
     }
 }
 
-
-    </script>
+</script>
 
 </body>
 </html>
